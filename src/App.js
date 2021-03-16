@@ -1,58 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+//import logo from './logo.svg';
+//import { Counter } from './features/counter/Counter';
 import './App.css';
+import {connect} from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  add() {
+    let value = Math.floor(Math.random() * 6) + 1;  
+    this.props.dispatch({type: "ADD", value: value})
+  }
+
+  clear() {
+    this.props.dispatch({type: "RESET"})
+  }
+
+  render() {
+      return (
+          <div>
+              <button onClick={() => this.add()}>Roll Dice</button>
+              <button onClick={() => this.clear()}>Clear Dice</button>
+              <h4>Sum: {this.props.count} </h4>
+              <div id="dices">
+                {this.props.diceLst.map(diceVal => (
+                  <Dice value={diceVal}/>
+                ))}
+              </div>
+          </div>
+      );
+  }
 }
 
-export default App;
+class Dice extends React.Component {
+  render() {
+    return (
+        <div className="dice">
+          {this.props.value}
+        </div>
+    );
+  }
+}
+
+let mapDispatchToProps = function(dispatch, ownProps) {
+  return {
+      dispatch: dispatch
+  };
+}
+
+let mapStateToProps = function(state, ownProps) {
+  return state;
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
